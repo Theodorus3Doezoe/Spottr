@@ -1,7 +1,0 @@
-function NotFound () {
-    return (
-        <>
-            
-        </>
-    )
-}
