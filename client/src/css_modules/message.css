@@ -1,0 +1,39 @@
+.comment {
+    display: flex; 
+    align-items: center;
+    font-family: sans-serif; 
+    padding: 10px; 
+  }
+  
+  .avatar img {
+    width: 11vw;
+    border-radius: 50%; 
+    margin-right: 10px; 
+  }
+
+  
+  .comment-header {
+    display: flex;
+    justify-content: space-between; 
+    align-items: center; 
+    margin-bottom: 5px; 
+  }
+  
+  .username {
+    font-weight: bold;
+    font-size: 1.5em;
+  }
+  
+  .time {
+    font-size: 0.9em;
+    color: gray;
+    position: absolute;
+    right: 1vw;
+  }
+
+  .comment-text {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 80vw;
+  }
