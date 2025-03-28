@@ -1,0 +1,141 @@
+.back_btn, .settings_btn {
+    border: none;
+    background: none;
+    position: absolute;
+    z-index: 99;
+    top: 0;
+
+}
+
+.back_btn {
+    left: 0;
+}
+
+.settings_btn {
+    right: 2vw;
+}
+
+.back_btn img, .settings_btn img {
+    width: 10vw;
+}
+
+.profile_card_container {
+    width: 95vw;
+    height: max-content;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: black 1px 1px 4px 0px;
+}
+
+.profile_card_image_container {
+    position: relative;
+    height: 55vh;
+}
+
+.profile_card_image {
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    object-fit: cover;
+}
+
+.profile_card_name_age {
+    position: absolute;
+    top: 0;
+    padding: 1%;
+    font-size: 1.5rem;
+}
+
+.summary_container {
+    position: absolute;
+    left: 0; 
+    right: 0; 
+    bottom: 2vh;
+    margin: auto; 
+    width: 98%;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    background-color: #FFF5E9;
+    padding: 1%;
+    box-shadow: black 1px 1px 4px 0px;
+}
+
+.summary_container img{
+    width: 5vw;
+    margin-right: 1vw;
+}
+
+.tags_container div{
+    display: flex;
+}
+
+.label_container {
+    display: flex;
+    gap: 2vw;
+    align-items: center;
+    
+}
+
+.location_container {
+    color: gray;
+    font-size: 80%;
+}
+
+.labels {
+    width: max-content;
+    height: min-content;
+    border-radius: 20px;
+    color: white;
+    padding: 7px;
+    gap: 1vw;
+    font-size: 90%;
+
+}
+
+.label_1 {
+    background-color: #1081E0;
+}
+
+.label_2 {
+    background-color: #FD5386;
+}
+
+.profile_card_bio_container {
+    padding: 0 1vw;
+}
+
+.bio_tags_container img{
+    width: 5vw;
+}
+
+.bio_tags_container {
+    padding: 0 5px;
+}
+
+.bio_tags_container div{
+    display: flex;
+    padding: 5px 0;
+    gap: 1vw;
+}
+
+.bio_more_info {
+    color: gray;
+    text-align: center;
+}
+
+.reject_match_btns {
+    display: flex;
+    justify-content: center;
+    gap: 10vw;
+    padding: 1vh 0;
+}
+
+.reject_match_btns button{
+    border: none;
+    background: none;
+}
+
+.reject_match_btns img{
+    width: 15vw;
+}

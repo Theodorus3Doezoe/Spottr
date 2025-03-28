@@ -1,0 +1,17 @@
+.nav_container {
+    display: flex;
+    justify-content: space-evenly;
+    width: 100%;;
+    position: absolute;
+    margin: 1vh 0;
+    bottom: 0;
+}
+
+.nav_container button {
+    border: none;
+    background: none;
+}
+
+.nav_container img {
+    width: 10vw;
+}
