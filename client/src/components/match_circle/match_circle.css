@@ -1,0 +1,13 @@
+.profile_pic_container{
+    width: min-content;
+    text-align: center;
+    font-size: 1.5em;
+}
+
+.profile_pic_container img{
+    width: 4rem;
+    height: 4rem;
+    background-color: #d1d5db;
+    border-radius: 50%;
+    flex-shrink: 0;
+}

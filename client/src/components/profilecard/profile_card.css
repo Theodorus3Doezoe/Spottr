@@ -20,8 +20,13 @@
 }
 
 .profile_card_container {
+    display: flex;
+    align-items: center;
+    height: 100%;
+}
+
+.profile_card {
     width: 95vw;
-    height: max-content;
     background-color: white;
     border-radius: 10px;
     box-shadow: black 1px 1px 4px 0px;
@@ -128,7 +133,7 @@
     display: flex;
     justify-content: center;
     gap: 10vw;
-    padding: 1vh 0;
+    padding: 3vh 0;
 }
 
 .reject_match_btns button{

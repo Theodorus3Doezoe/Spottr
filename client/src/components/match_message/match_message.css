@@ -1,0 +1,85 @@
+.profile-card {
+    background-color: white;
+    border-radius: 0.75rem;
+    padding: 1rem;
+    box-shadow: 1px 1px 2px 0 black;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    width: 95%;
+}
+
+.profile-picture {
+    width: 4rem;
+    height: 4rem;
+    background-color: #d1d5db;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.content {
+    flex: 1 1 0%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+    min-width: 0;
+}
+
+.top-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 0.125rem;
+}
+
+.name-age {
+    font-weight: 600;
+    color: #1f2937;
+    font-size: 1rem;
+    line-height: 1.5rem;
+}
+
+.timestamp {
+    font-size: 0.75rem;
+    line-height: 1rem;
+    color: #6b7280;
+    white-space: nowrap;
+}
+
+.snippet {
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    color: #4b5563;
+    margin: 0;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+}
+
+.tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.tag {
+    color: #ffffff;
+    font-size: 0.75rem;
+    line-height: 1;
+    font-weight: 500;
+    padding: .3rem;
+    border-radius: 20px;
+    display: inline-block;
+}
+
+.tag-blue {
+    background-color: #3b82f6;
+}
+.tag-pink {
+    background-color: #ec4899;
+}
+.tag-purple {
+    background-color: #c084fc;
+}
