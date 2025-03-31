@@ -2,9 +2,9 @@
     display: flex;
     justify-content: space-evenly;
     width: 100%;;
-    position: absolute;
+    /* position: absolute; */
     margin: 1vh 0;
-    bottom: 0;
+    /* bottom: 0; */
 }
 
 .nav_container button {

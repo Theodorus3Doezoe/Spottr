@@ -7,12 +7,14 @@ import './main.css'
 
 //Components
 import Header from './components/header/Header'
-import Profile_card from './components/profilecard/Profile_card'
 import Nav from './components/nav/Nav'
+import Profile_card from './components/profilecard/Profile_card'
+import Post from './components/post/Post'
 
 const router = createBrowserRouter([
   {path: "/", element: <div className='feed_container'>
     <Header/>
+    <Post/>
     <Nav/>
   </div>},
   

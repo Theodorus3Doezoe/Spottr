@@ -1,0 +1,60 @@
+.post_container {
+    width: 95vw;
+    height: 80vh;
+    border: solid purple;
+    background-color: white;
+}
+
+.user_info {
+    display: flex;
+    align-items: center;
+    background-color: #ffffff;
+    padding: 10px 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    justify-content: space-between;
+}
+
+.text-content {
+    display: flex;
+    flex-direction: column;
+    margin-right: 10px;
+}
+
+.name {
+    font-size: 18px; 
+    font-weight: 600;
+    color: #333;
+}
+
+.date-time {
+    font-size: 12px;
+    color: #666;
+}
+
+.activity-tag {
+    background-color: #EAFF00; 
+    color: #333;
+    padding: 5px 10px; 
+    border-radius: 15px; 
+    font-size: 12px;
+    font-weight: 600; 
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.stat_1, .stat_2, .stat_3{
+    width: 25vw;
+    height: 25vw;
+}
+
+.stat_1 {
+    background-color: rgba(16, 129, 224, .5);
+}
+
+.stat_2 {
+    background-color: rgba(253, 83, 134, .5);
+}
+
+.stat_3 {
+    background-color: #B4B4FF;
+}
