@@ -12,6 +12,10 @@ import Profile_card from './components/profilecard/Profile_card'
 import Post from './components/post/Post'
 import Match_circle from './components/match_circle/Match_circle'
 import Match_message from './components/match_message/Match_message'
+import Settings from './pages/settings/Settings'
+import Profile from './pages/profile_settings/Profile'
+import Auth from './pages/auth/Auth'
+import Update_password from './pages/update_password/update_password'
 
 const router = createBrowserRouter([
   {path: "/", element: <div className='feed_container'>
@@ -38,6 +42,24 @@ const router = createBrowserRouter([
   </div>
   <Nav/>
 </div>},
+
+{path: '/settings', element: <>
+  <Settings/>
+</>},
+
+{path: '/profile', element: <>
+  <Profile/>
+</>},
+
+{path: '/auth', element: <>
+  <Auth/>
+</>},
+
+{path: '/update_password', element: <>
+  <Update_password/>
+</>},
+
+
 ])
 
 createRoot(document.getElementById('root')).render(
