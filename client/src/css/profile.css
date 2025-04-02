@@ -1,0 +1,274 @@
+/* EditProfileScreen.css */
+
+/* Basic Reset & Body Styling */
+
+  
+  /* Container */
+  .edit-profile-container {
+    margin: 1vh auto;
+    height: max-content;
+    background-color: #fff9f4; /* Match body */
+    max-width: 400px;
+    width: 100%;
+    box-sizing: border-box;
+
+    /* padding-bottom: 80px; Space for save button */
+  }
+  
+  /* Header */
+  .edit-profile-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    padding: 0 5px; /* Align with content */
+  }
+  
+  .back-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    color: #555;
+  }
+  
+  .edit-profile-title {
+    font-size: 22px;
+    font-weight: bold;
+    color: #000;
+    margin: 0;
+    flex-grow: 1;
+    text-align: center;
+    /* Adjust position slightly if needed */
+    position: relative;
+    left: -10px; /* Compensate for back button width */
+  }
+  
+  .header-icon {
+    /* Placeholder for icon */
+    width: 24px;
+    height: 24px;
+    /* background-color: #ff6b6b; Pinkish color */
+    /* border-radius: 4px; */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  /* Image Grid */
+  .image-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 columns */
+    gap: 10px; /* Space between slots */
+    margin-bottom: 5px;
+  }
+  
+  .image-slot {
+    position: relative;
+    aspect-ratio: 1 / 1; /* Make slots square */
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden; /* Clip image corners */
+  }
+  
+  .image-slot.empty {
+    border: 2px dashed #ccc; /* Dashed border for empty */
+    background-color: #f8f8f8;
+  }
+  
+  .image-slot.set {
+    border: 1px solid #eee; /* Solid border for set */
+    background-color: #e0e0e0; /* Placeholder background */
+  }
+  
+  .profile-image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Cover the slot */
+  }
+  
+  .add-image-button,
+  .remove-image-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    position: absolute;
+  }
+  
+  .add-image-button {
+    /* Position in center for empty slots */
+    color: #aaa;
+  }
+  
+  .remove-image-button {
+    top: 5px;
+    right: 5px;
+    background-color: rgba(0, 0, 0, 0.5); /* Dark semi-transparent background */
+    color: white;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1; /* Ensure icon centers */
+  }
+  
+  .image-grid-caption {
+    font-size: 14px;
+    color: #555;
+    text-align: center;
+    margin-bottom: 2px;
+    margin-top: 15px;
+  }
+  .image-grid-subcaption {
+    font-size: 12px;
+    color: #777;
+    text-align: center;
+    margin-bottom: 25px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 20px;
+  }
+  
+  /* Form Sections */
+  .form-section {
+    margin-bottom: 25px;
+  }
+  
+  .section-label {
+    display: block;
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #333;
+  }
+  
+  .inline-label {
+      display: inline-block;
+      margin-right: 15px;
+  }
+  
+  /* Bio Textarea */
+  .bio-textarea {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 14px;
+    box-sizing: border-box;
+    background-color: #fff;
+    resize: vertical; /* Allow vertical resize */
+    min-height: 80px;
+  }
+  
+  /* Looking For Select */
+  .looking-for-select {
+    padding: 8px 30px 8px 12px; /* Adjust padding */
+    border: 1px solid #ccc;
+    border-radius: 20px; /* Pill shape */
+    font-size: 14px;
+    background-color: #fff;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    /* Custom arrow */
+    background-image: url('data:image/svg+xml;utf8,<svg fill="%23555" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 0.8em;
+  }
+  
+  /* Labels */
+  .labels-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 15px;
+  }
+  
+  .label-tag {
+    padding: 5px 12px;
+    border-radius: 15px; /* Pill shape */
+    font-size: 13px;
+    font-weight: 500;
+    color: #fff; /* Default white text */
+  }
+  
+  /* Specific sport label colors */
+  .sport-fitness { background-color: #007bff; } /* Blue */
+  .sport-running { background-color: #ff6b6b; } /* Pink */
+  .sport-yoga { background-color: #9c27b0; } /* Purple */
+  /* Add more colors as needed */
+  
+  
+  /* Add Label Group */
+  .add-label-group {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+  
+  .add-label-input {
+    flex-grow: 1;
+    padding: 10px 15px;
+    border: 1px solid #ccc;
+    border-radius: 20px; /* Pill shape */
+    font-size: 14px;
+    background-color: #fff;
+  }
+  
+  .add-label-button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 20px; /* Pill shape */
+    background-color: #ff6b6b; /* Pink */
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  
+  .add-label-button:hover {
+    background-color: #e05252; /* Darker pink */
+  }
+  
+  /* Personal Info List */
+  .personal-info-list {
+      margin-bottom: 15px;
+      font-size: 14px;
+      color: #333;
+  }
+  .personal-info-item {
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px; /* Space between icon and text */
+  }
+  
+  /* Save Changes Button */
+  .save-changes-button {
+    width: 100%;
+    padding: 15px;
+    /* margin-top: 30px; */
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    background-color: #007bff; /* Blue */
+    border: none;
+    border-radius: 25px; /* Pill shape */
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    margin-bottom: 3vh;
+  }
+
+  
+  .save-changes-button:hover {
+    background-color: #0056b3; /* Darker blue */
+  }
+  
