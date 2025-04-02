@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Nav from '../components/nav/Nav';
 import '../css/settings.css'
+import axios from 'axios';
+import toast from 'react-hot-toast';
 
 // Settings Screen Component
 export default function Settings() {
@@ -11,6 +13,18 @@ export default function Settings() {
   const [maxAge, setMaxAge] = useState(25);
   const [showMePreference, setShowMePreference] = useState('Women'); // State for 'Show me' dropdown
 
+  const logoutHandler = () => {
+    try {
+      axios.post('/logout', null, {withCredentials:true})
+      .then(response => {
+        if(response.status===200) {
+          window.location.href = '/login'
+        }
+      })
+    } catch (error) {
+      toast.error(error)
+    }
+  }
 
   return (
     <div className='settings_wrapper'>
@@ -124,7 +138,7 @@ export default function Settings() {
         </div>
 
         {/* Logout Button */}
-        <button className="logout-button">
+        <button className="logout-button" onClick={logoutHandler}>
           {/* Simple SVG for logout icon */}
           <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="logout-icon">
             <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
