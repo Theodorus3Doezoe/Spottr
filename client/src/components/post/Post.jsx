@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
 import './post.css'
 
-const mapImageUrl = 'https://placehold.co/600x400/a3c4f3/ffffff?text=Kaart+Afbeelding](https://placehold.co/600x400/a3c4f3/ffffff?text=Kaart+Afbeelding'; // Lichtblauw
-const statsImageUrl = 'https://placehold.co/600x400/f3a3a3/ffffff?text=Stats+Afbeelding](https://placehold.co/600x400/f3a3a3/ffffff?text=Stats+Afbeelding)'; // Lichtrood
-const errorImageUrl = '[https://placehold.co/600x400/cccccc/ffffff?text=Error+Loading+Image](https://www.google.com/search?q=https://placehold.co/600x400/cccccc/ffffff%3Ftext%3DError%2BLoading%2BImage'; // Grijze fallback
+const mapImageUrl = 'https://placehold.co/600x400/a3c4f3/ffffff?text=Kaart+Afbeelding(https://placehold.co/600x400/a3c4f3/ffffff?text=Kaart+Afbeelding'; // Lichtblauw
+const statsImageUrl = 'https://placehold.co/600x400/f3a3a3/ffffff?text=Stats+Afbeelding(https://placehold.co/600x400/f3a3a3/ffffff?text=Stats+Afbeelding)'; // Lichtrood
+const errorImageUrl = 'https://placehold.co/600x400/cccccc/ffffff?text=Error+Loading+Image(https://www.google.com/search?q=https://placehold.co/600x400/cccccc/ffffff%3Ftext%3DError%2BLoading%2BImage'; // Grijze fallback
 
 
 

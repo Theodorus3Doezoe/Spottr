@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Nav from '../components/nav/Nav';
 import '../css/settings.css'
 import axios from 'axios';
@@ -7,6 +7,7 @@ import toast from 'react-hot-toast';
 
 // Settings Screen Component
 export default function Settings() {
+  const navigate = useNavigate()
   // State for interactive elements (optional, for demonstration)
   const [maxDistance, setMaxDistance] = useState(50);
   const [minAge, setMinAge] = useState(18);
@@ -18,7 +19,9 @@ export default function Settings() {
       axios.post('/logout', null, {withCredentials:true})
       .then(response => {
         if(response.status===200) {
-          window.location.href = '/login'
+          // window.location.href = '/login'
+          navigate('/login')
+          toast.success('Log out succesfull')
         }
       })
     } catch (error) {
