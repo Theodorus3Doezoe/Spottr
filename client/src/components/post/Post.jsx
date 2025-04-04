@@ -53,41 +53,43 @@ export default function Post() {
             <p>324</p>
         </div>
       </div>
-      <div className="map_stats_btn">
-        <button
-          className={`tab-button ${activeView === 'map' ? 'active' : ''}`}
-          onClick={() => setActiveView('map')}
-          >
-          Map
-        </button>
-        <button
-          className={`tab-button ${activeView === 'stats' ? 'active' : ''}`}
-          onClick={() => setActiveView('stats')}
-          >
-          Stats
-        </button>
-      </div>
+      <div className="mapContainer">
+        <div className="map_stats_btn">
+          <button
+            className={`tab-button ${activeView === 'map' ? 'active' : ''}`}
+            onClick={() => setActiveView('map')}
+            >
+            Map
+          </button>
+          <button
+            className={`tab-button ${activeView === 'stats' ? 'active' : ''}`}
+            onClick={() => setActiveView('stats')}
+            >
+            Stats
+          </button>
+        </div>
 
-      <div className={`image-container show-${activeView}`}>
-        {/* Afbeelding voor de kaart */}
-        <img
-           src={mapImageUrl}
-           alt="Kaart weergave"
-           className="content-image map-image"
-           onError={handleImageError} // Gebruik de error handler
-        />
-        {/* Afbeelding voor de statistieken */}
-        <img
-           src={statsImageUrl}
-           alt="Statistieken weergave"
-           className="content-image stats-image"
-           onError={handleImageError} // Gebruik de error handler
-        />
-        
-      </div>
-      <div className="location_container">
-        <img src="src/assets/gps.png" alt="" />
-        <p>Fonty's ict campus</p>
+        <div className={`image-container show-${activeView}`}>
+          {/* Afbeelding voor de kaart */}
+          <img
+            src={mapImageUrl}
+            alt="Kaart weergave"
+            className="content-image map-image"
+            onError={handleImageError} // Gebruik de error handler
+          />
+          {/* Afbeelding voor de statistieken */}
+          <img
+            src={statsImageUrl}
+            alt="Statistieken weergave"
+            className="content-image stats-image"
+            onError={handleImageError} // Gebruik de error handler
+          />
+          
+        </div>
+        <div className="location_container">
+          <img src="src/assets/gps.png" alt="" />
+          <p>Fonty's ict campus</p>
+        </div>
       </div>
       <div className="like_comment_container">
         <img src="src/assets/post/like.png" alt="" />

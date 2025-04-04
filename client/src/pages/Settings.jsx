@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
+import { UserContext } from '../../context/userContext';
 import { Link, useNavigate } from 'react-router-dom';
 import Nav from '../components/nav/Nav';
 import '../css/settings.css'
@@ -7,6 +8,53 @@ import toast from 'react-hot-toast';
 
 // Settings Screen Component
 export default function Settings() {
+
+    const [userData, setUserData] = useState({});
+    const [loading, setLoading] = useState(true);
+  
+    useEffect(() => {
+      // Definieer en roep de async functie meteen aan (IIFE)
+      (async () => { // Begin van de anonieme async functie expressie
+        setLoading(true);
+        const token = localStorage.getItem('token');
+  
+        if (!token) {
+          toast.error('Geen token gevonden. Log opnieuw in.');
+          setLoading(false);
+          return;
+        }
+  
+        try {
+          const response = await axios.get('/settings', { // Zorg dat pad klopt (/api/auth/settings bv)
+            headers: {
+              'Authorization': `Bearer ${token}`
+            }
+          });
+          setUserData(response.data.user || response.data); // Pas aan o.b.v. backend response structuur
+        } catch (err) {
+          console.error("Fout bij ophalen gebruikersdata:", err);
+          let errorMessage = 'Er is iets misgegaan bij het ophalen van de gegevens.';
+          if (err.response) {
+            // ... (je bestaande error handling logica) ...
+            errorMessage = err.response.data?.message || `Server error: ${err.response.status}`;
+            if (err.response.status === 401) {
+              localStorage.removeItem('token');
+              errorMessage += " Token ongeldig of verlopen. Log opnieuw in.";
+            }
+          } else if (err.request) {
+            errorMessage = 'Geen response ontvangen van de server.';
+          } else {
+            errorMessage = err.message;
+          }
+          toast.error(errorMessage);
+        } finally {
+          setLoading(false);
+        }
+      })(); // <-- Roep de functie direct aan met ();
+  
+    }, []);
+
+
   const navigate = useNavigate()
   // State for interactive elements (optional, for demonstration)
   const [maxDistance, setMaxDistance] = useState(50);
@@ -41,7 +89,7 @@ export default function Settings() {
             <div className="profile-info">
               <div className="profile-pic-placeholder"></div>
               <div>
-                <div className="profile-name">Sven, 21</div>
+                {/* <div className="profile-name">{!!user && (<h2>{user.name}, 21</h2>)}</div> */}
                   <div className="profile-edit-link">Edit profile</div>
               </div>
             </div>
@@ -51,23 +99,10 @@ export default function Settings() {
 
         {/* Account Section */}
         <h2 className="section-title">Account</h2>
-        <div className="form-group">
-          <label>Full name</label>
-          <div className="name-inputs">
-            <input type="text" placeholder="First name" className="input-field half-width" />
-            <input type="text" placeholder="Surname" className="input-field half-width" />
-          </div>
-        </div>
-        <div className="form-group">
-          <label htmlFor="email">Email address</label>
-          <input type="email" id="email" placeholder="your@email.com" className="input-field" />
-        </div>
-        <div className="form-group">
-          <label htmlFor="birthdate">Birthdate</label>
-          <div className="select-field">
-            <span>6 december 2003</span>
-            <span className="dropdown-icon">▼</span>
-          </div>
+        <div className="user_data">
+          <p>{userData.name}</p>
+          <p>{userData.surname}</p>
+          <p>{userData.email}</p>
         </div>
         <Link to={'/update_password'} style={{ textDecoration: 'none', color: 'black' }}>
           <div className="link-group">

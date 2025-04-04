@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 // Make sure to link the CSS file (e.g., in your main HTML or App component)
 import '../css/profile.css';

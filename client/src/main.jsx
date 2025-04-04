@@ -16,6 +16,7 @@ import Settings from './pages/Settings'
 import Profile from './pages/Profile'
 import Login from './pages/Login'
 import Register from './pages/Register'
+import UserProfile from "./pages/info_test";
 
 axios.defaults.baseURL = 'http://localhost:8000'
 axios.defaults.withCredentials = true
@@ -61,6 +62,10 @@ const router  = createBrowserRouter([
   {
     path: 'register',
     element: <Register/>,
+  },
+  {
+    path: 'info',
+    element: <UserProfile/>,
   },
 ])
 

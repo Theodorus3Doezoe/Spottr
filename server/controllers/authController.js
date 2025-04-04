@@ -4,8 +4,9 @@ const jwt = require('jsonwebtoken')
 
 // Register endpoint
 const registerUser = async (req, res) => {
+
     try {
-        const {name, email, password} = req.body
+        const {name, surname, email, password, passwordConfirm, birthdate} = req.body
 
         // Check if name was entered
         if(!name) {
@@ -21,6 +22,13 @@ const registerUser = async (req, res) => {
             })
         }
 
+        // Check if passwords match
+        if(password != passwordConfirm) {
+            return res.json({
+                error: 'Passwords dont match!'
+            })
+        }
+
         // Check email
         const exist = await User.findOne({email})
         if(exist) {
@@ -33,8 +41,10 @@ const registerUser = async (req, res) => {
 
         const user = await User.create({
             name,
+            surname,
             email,
-            password: hashedPassword
+            password: hashedPassword,
+            birthdate,
         })
 
         return res.json(user)
@@ -60,9 +70,9 @@ const loginUser = async (req, res) => {
         const match = await comparePassword(password, user.password)
 
         if(match) {
-            jwt.sign({email: user.email, id: user._id, name: user.name}, process.env.JWT_SECRET, {}, (err, token) => {
+            jwt.sign({id: user._id}, process.env.JWT_SECRET, {}, (err, token) => {
                 if(err) throw err
-                res.cookie('token', token).json({user: user, token: token})
+                res.cookie('token', token).json({token: token})
             })
         }
         if(!match) {
