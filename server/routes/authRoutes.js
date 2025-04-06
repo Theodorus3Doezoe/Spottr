@@ -1,8 +1,9 @@
 const express = require('express')
 const router = express.Router()
 const cors = require('cors')
-const {registerUser, loginUser, getProfile, logoutUser,} = require('../controllers/authController')
-const {protect, getUserData} = require('../controllers/dataController')
+const {registerUser, loginUser, getProfile, logoutUser, updateProfile} = require('../controllers/authController')
+
+
 
 // Middleware
 router.use(
@@ -19,7 +20,7 @@ router.post('/logout', logoutUser)
 
 // Get requests
 router.get('/profile', getProfile)
-router.get('/settings', protect, getUserData)
 
+router.put('/updateProfile', updateProfile)
 
 module.exports = router

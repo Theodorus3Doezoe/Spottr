@@ -25,12 +25,12 @@ export default function Post() {
   return (
     <div className='post_container'>
       <div className="user_info">
-        <div class="text-content">
+        <div className="text-content">
             <img src="" alt="" srcset="" />
-            <div class="name">Sven</div>
-            <div class="date-time">25 March, 2025 at 14:39</div>
+            <div className="name">Sven</div>
+            <div className="date-time">25 March, 2025 at 14:39</div>
         </div>
-        <div class="activity-tag">Running</div>
+        <div className="activity-tag">Running</div>
       </div>
       <div className="desccription_container">
         <h1>Running</h1>

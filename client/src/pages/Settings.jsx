@@ -1,67 +1,23 @@
-import React, { useState, useContext, useEffect } from 'react';
-import { UserContext } from '../../context/userContext';
+import {React, useState, useContext} from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Nav from '../components/nav/Nav';
 import '../css/settings.css'
 import axios from 'axios';
 import toast from 'react-hot-toast';
+import { UserContext } from "../../context/userContext"
+
+
 
 // Settings Screen Component
 export default function Settings() {
-
-    const [userData, setUserData] = useState({});
-    const [loading, setLoading] = useState(true);
-  
-    useEffect(() => {
-      // Definieer en roep de async functie meteen aan (IIFE)
-      (async () => { // Begin van de anonieme async functie expressie
-        setLoading(true);
-        const token = localStorage.getItem('token');
-  
-        if (!token) {
-          toast.error('Geen token gevonden. Log opnieuw in.');
-          setLoading(false);
-          return;
-        }
-  
-        try {
-          const response = await axios.get('/settings', { // Zorg dat pad klopt (/api/auth/settings bv)
-            headers: {
-              'Authorization': `Bearer ${token}`
-            }
-          });
-          setUserData(response.data.user || response.data); // Pas aan o.b.v. backend response structuur
-        } catch (err) {
-          console.error("Fout bij ophalen gebruikersdata:", err);
-          let errorMessage = 'Er is iets misgegaan bij het ophalen van de gegevens.';
-          if (err.response) {
-            // ... (je bestaande error handling logica) ...
-            errorMessage = err.response.data?.message || `Server error: ${err.response.status}`;
-            if (err.response.status === 401) {
-              localStorage.removeItem('token');
-              errorMessage += " Token ongeldig of verlopen. Log opnieuw in.";
-            }
-          } else if (err.request) {
-            errorMessage = 'Geen response ontvangen van de server.';
-          } else {
-            errorMessage = err.message;
-          }
-          toast.error(errorMessage);
-        } finally {
-          setLoading(false);
-        }
-      })(); // <-- Roep de functie direct aan met ();
-  
-    }, []);
-
-
+  const {user} = useContext(UserContext)
   const navigate = useNavigate()
   // State for interactive elements (optional, for demonstration)
   const [maxDistance, setMaxDistance] = useState(50);
   const [minAge, setMinAge] = useState(18);
   const [maxAge, setMaxAge] = useState(25);
   const [showMePreference, setShowMePreference] = useState('Women'); // State for 'Show me' dropdown
-
+  
   const logoutHandler = () => {
     try {
       axios.post('/logout', null, {withCredentials:true})
@@ -77,7 +33,14 @@ export default function Settings() {
     }
   }
 
-  return (
+  if (!user) {
+    // Optie 1: Toon een laadindicator
+    return <div>Loading profile...</div>;
+
+    // Optie 2: Render niets (of een minimale layout)
+    // return null;
+  }
+    return (
     <div className='settings_wrapper'>
       <div className="settings-container">
         {/* Header */}
@@ -89,6 +52,7 @@ export default function Settings() {
             <div className="profile-info">
               <div className="profile-pic-placeholder"></div>
               <div>
+              <h1>{user.name}, {user.age}</h1>
                 {/* <div className="profile-name">{!!user && (<h2>{user.name}, 21</h2>)}</div> */}
                   <div className="profile-edit-link">Edit profile</div>
               </div>
@@ -99,11 +63,11 @@ export default function Settings() {
 
         {/* Account Section */}
         <h2 className="section-title">Account</h2>
-        <div className="user_data">
-          <p>{userData.name}</p>
-          <p>{userData.surname}</p>
-          <p>{userData.email}</p>
-        </div>
+        {/* <div className="user_data">
+          <p>{user.name}</p>
+          <p>{user.surname}</p>
+          <p>{user.email}</p>
+        </div> */}
         <Link to={'/update_password'} style={{ textDecoration: 'none', color: 'black' }}>
           <div className="link-group">
             <span>Change password</span>
@@ -172,7 +136,7 @@ export default function Settings() {
                   aria-label="Maximum age"
               />
           </div>
-
+          <button className="save-changes-button">Save changes</button>
         </div>
 
         {/* Logout Button */}

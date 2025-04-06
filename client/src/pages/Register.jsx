@@ -3,10 +3,10 @@ import { useNavigate, Link } from 'react-router-dom'; // Voor redirect na succes
 import axios from 'axios';
 import {toast} from 'react-hot-toast'
 import '../css/register.css'
-import { differenceInYears, parseISO } from 'date-fns';
+
 
 export default function Register() {
-  const MINIMUM_AGE = 18
+  // const MINIMUM_AGE = 18
   const navigate = useNavigate()
   const [data, setData] = useState({
     name: '',
@@ -27,34 +27,6 @@ export default function Register() {
   const registerUser = async (e) => {
     e.preventDefault()
     const {name, surname, email, password, passwordConfirm, birthdate} = data
-
-
-    if (data.birthdate) {
-      try {
-        const birthDateObj = parseISO(data.birthdate); // Zet 'YYYY-MM-DD' string om naar Date object
-        const today = new Date();
-        const age = differenceInYears(today, birthDateObj); // Bereken verschil in volle jaren
-  
-        console.log('Calculated age (frontend):', age); // Voor debugging
-  
-        if (age < MINIMUM_AGE) {
-          toast.error(`Je moet minimaal ${MINIMUM_AGE} jaar oud zijn.`);
-          // setLoading(false);
-          return; // Stop de submit
-        }
-      } catch (parseError) {
-         // Handle error als de datumstring ongeldig was (zou niet moeten gebeuren met type="date")
-         console.error("Error parsing birthdate:", parseError);
-         toast.error('Ongeldige geboortedatum ingevoerd.');
-        //  setLoading(false);
-         return;
-      }
-    } else {
-       // Geboortedatum is verplicht, maar leeg? Handig als 'required' niet werkt.
-       toast.error('Geboortedatum is verplicht.');
-      //  setLoading(false);
-       return;
-    }
 
     try {
       const {data} = await axios.post('/register', {
@@ -88,9 +60,9 @@ export default function Register() {
       <label>Email</label>
       <input type='text' placeholder='Enter email' name='email' value={data.email} onChange={onChange} />
       <label>Password</label>
-      <input type='text' placeholder='Enter password' name='password' value={data.password} onChange={onChange} />
+      <input type='password' placeholder='Enter password' name='password' value={data.password} onChange={onChange} />
       <label>Confirm password</label>
-      <input type='text' placeholder='Enter password' name='passwordConfirm' value={data.passwordConfirm} onChange={onChange} />
+      <input type='password' placeholder='Enter password' name='passwordConfirm' value={data.passwordConfirm} onChange={onChange} />
       <label>Enter birthdate</label>
       <input
           type="date" // Gebruik type="date"
@@ -98,7 +70,7 @@ export default function Register() {
           name="birthdate" // Koppel aan de 'birthdate' key in formData state
           value={data.birthdate} // Bind aan de state
           onChange={onChange} // Gebruik dezelfde generieke onChange handler
-          required // Maak het veld verplicht indien nodig
+           // Maak het veld verplicht indien nodig
           // Optioneel: stel max in op vandaag om toekomstige data te voorkomen
           max={new Date().toISOString().split("T")[0]}
         />

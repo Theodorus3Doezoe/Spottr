@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState} from 'react';
 import { useNavigate, Link } from 'react-router-dom'; // Voor redirect na succes
 import axios from 'axios';
 import {toast} from 'react-hot-toast'
 import '../css/register.css'
 
-export default function Login() {
 
-  const navigate = useNavigate()
+
+export default function Login() {
+  // const { setUser } = useContext(UserContext)
   const [data, setData] = useState({
     email: '',
     password: '',
@@ -23,20 +24,18 @@ export default function Login() {
       if(data.error) {
         toast.error(data.error)
       } else {
+        // setUser(data.user)
         setData({
           email: '',
           password: '',
         })
 
         if (data.token) {
-          console.log("Token found in response data. Saving to localStorage...");
           localStorage.setItem('token', data.token);
-          console.log("Token should be saved now. Navigating...");
           toast.success('Login Succesful, welcome');
-          navigate('/'); // Navigeer pas hier
+          window.location.href = '/'
         } else {
           // Als data.token leeg is, log dit en stop
-          console.error("Token NOT found in backend response data!");
           toast.error("Login failed: Could not retrieve session token.");
           // Niet navigeren als er geen token is!
         }
@@ -51,7 +50,7 @@ export default function Login() {
       <label>Email</label>
       <input type='text' placeholder='Enter email' value={data.email} onChange={(e) => setData({...data, email: e.target.value})} />
       <label>Password</label>
-      <input type='text' placeholder='Enter password' value={data.password} onChange={(e) => setData({...data, password: e.target.value})} />
+      <input type='password' placeholder='Enter password' value={data.password} onChange={(e) => setData({...data, password: e.target.value})} />
       <button type="submit">Login</button>
       <Link to={"/register"}>
         <p>Heb je nog geen account? Registreer hier.</p>

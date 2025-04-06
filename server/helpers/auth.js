@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt')
 
+
 const hashPassword = (password) => {
     return new Promise ((resolve, reject) => {
         bcrypt.genSalt(12, (err, salt) => {
@@ -20,7 +21,13 @@ const comparePassword = (password, hashed) => {
     return bcrypt.compare(password, hashed)
 }
 
+const capitalizeFirstLetter = (string) => {
+    if (!string) return '';
+    return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+};
+
 module.exports = {
     hashPassword,
-    comparePassword
+    comparePassword,
+    capitalizeFirstLetter,
 }
