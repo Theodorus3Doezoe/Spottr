@@ -17,6 +17,7 @@ export default function ProfileSetup() {
     const navigate = useNavigate();
     const [data, setData] = useState({
         bio: '',
+        gender: '',
         lookingFor: LOOKING_FOR_OPTIONS[0],
         sportLabels: [], // Max 2, user input
         personalLabels: [], // Max 4, [{label: 'Category', value: 'User input'}]
@@ -111,7 +112,7 @@ export default function ProfileSetup() {
     const setupProfile = async (e) => {
         e.preventDefault();
         // Stuur de huidige staat van `data`
-        const { bio, lookingFor, sportLabels, personalLabels } = data;
+        const { bio, gender, lookingFor, sportLabels, personalLabels } = data;
 
         if (!bio.trim()) {
            return toast.error('Bio mag niet leeg zijn.');
@@ -122,6 +123,7 @@ export default function ProfileSetup() {
             // !! VERVANG '/api/profile/setup' MET JE ECHTE BACKEND ENDPOINT !!
             const response = await axios.put('updateProfile', {
                 bio,
+                gender,
                 lookingFor,
                 sportLabels,
                 personalLabels // Stuur de array van objecten mee
@@ -153,6 +155,12 @@ export default function ProfileSetup() {
                     <label htmlFor="bio">Bio</label><br/>
                     <textarea id="bio" name="bio" value={data.bio} onChange={onChange} placeholder="Vertel iets over jezelf..." maxLength={500} />
                 </div>
+
+                <label htmlFor="gender"></label>
+                <select name="gender" value={data.gender} onChange={onChange}id="">
+                    <option value='male'>Male</option>
+                    <option value='female'>Female</option>
+                </select>
 
                 {/* Looking For */}
                 <div>

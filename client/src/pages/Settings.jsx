@@ -63,11 +63,11 @@ export default function Settings() {
 
         {/* Account Section */}
         <h2 className="section-title">Account</h2>
-        {/* <div className="user_data">
+        <div className="user_data">
           <p>{user.name}</p>
           <p>{user.surname}</p>
           <p>{user.email}</p>
-        </div> */}
+        </div>
         <Link to={'/update_password'} style={{ textDecoration: 'none', color: 'black' }}>
           <div className="link-group">
             <span>Change password</span>

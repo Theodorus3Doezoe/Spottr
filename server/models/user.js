@@ -28,6 +28,7 @@ const userSchema = new Schema ({
         maxlength: 500,
         default: ''
     },
+    gender: String,
     lookingFor: {
         type: String,
         enum: ['Friends', 'Workout Partner', 'Relationship', 'Networking'],
