@@ -17,6 +17,7 @@ import Profile from './pages/Profile'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import ProfileSetup from "./pages/ProfileSetup";
+import TestMatching from './pages/TestMatching'
 
 axios.defaults.baseURL = 'http://localhost:8000'
 axios.defaults.withCredentials = true
@@ -58,6 +59,10 @@ const router  = createBrowserRouter([
           path: 'setup',
           element: <ProfileSetup/>,
         },
+        {
+          path: 'test-matching',
+          element: <TestMatching/>
+        }
       ]
   }
 ])

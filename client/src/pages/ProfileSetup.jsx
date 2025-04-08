@@ -156,8 +156,9 @@ export default function ProfileSetup() {
                     <textarea id="bio" name="bio" value={data.bio} onChange={onChange} placeholder="Vertel iets over jezelf..." maxLength={500} />
                 </div>
 
-                <label htmlFor="gender"></label>
-                <select name="gender" value={data.gender} onChange={onChange}id="">
+                <label htmlFor="gender">Gender</label>
+                <select name="gender" value={data.gender} onChange={onChange}id="" required>
+                    <option value="" disabled hidden>Choose your gender</option>
                     <option value='male'>Male</option>
                     <option value='female'>Female</option>
                 </select>

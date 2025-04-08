@@ -223,11 +223,12 @@ const updateProfile = (req, res) => {
             const userId = decodedPayload.id;
 
             // 4. Haal de te updaten data uit de request body
-            const { bio, lookingFor, sportLabels, personalLabels /*, photos */ } = req.body;
+            const { bio, gender, lookingFor, sportLabels, personalLabels /*, photos */ } = req.body;
 
             // 5. Bouw het update-object alleen met de velden die zijn meegegeven
             const updateData = {};
             if (bio !== undefined) updateData.bio = bio;
+            if (gender !== undefined) updateData.gender = gender;
             if (lookingFor !== undefined) updateData.lookingFor = lookingFor;
             if (sportLabels !== undefined) updateData.sportLabels = sportLabels;
             if (personalLabels !== undefined) updateData.personalLabels = personalLabels;
