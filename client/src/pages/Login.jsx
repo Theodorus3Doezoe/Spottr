@@ -44,6 +44,11 @@ export default function Login() {
       console.log(error)
     }
   }
+
+  // if (user) {
+  //   return <div>You need to log out before login in!</div>;
+  // }
+
   return (
     <div className="register_container">
       <form onSubmit={loginUser}>

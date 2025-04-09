@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const cors = require('cors')
-const {registerUser, loginUser, getProfile, logoutUser, updateProfile} = require('../controllers/authController')
+const {registerUser, loginUser, getProfile, logoutUser, updateProfile, getPotentialMatches, matchAction} = require('../controllers/authController')
 
 
 
@@ -20,7 +20,9 @@ router.post('/logout', logoutUser)
 
 // Get requests
 router.get('/profile', getProfile)
+router.get('/matches/potential', getPotentialMatches)
 
 router.put('/updateProfile', updateProfile)
+router.post('/matches/action', matchAction)
 
 module.exports = router

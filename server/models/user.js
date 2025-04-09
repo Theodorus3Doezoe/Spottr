@@ -57,10 +57,33 @@ const userSchema = new Schema ({
        type: [String], // Array van foto URLs
        validate: [v => v.length <= 6, 'Maximaal 6 foto\'s toegestaan'],
        default: []
-    }
+    },
 
 
     //matching preferrences
+    showMePreference: String,
+    maxDistance: Number,
+    minAge: Number,
+    maxAge: Number,
+
+    // === VELDEN VOOR SWIPE/MATCH DATA ===
+    likedUserIds: [{
+        type: Schema.Types.ObjectId, // Slaat MongoDB Object ID's op
+        ref: 'User',                 // Verwijst naar andere documenten in de 'User' collectie
+        default: []                  // Begin altijd met een lege lijst
+    }],
+    dislikedUserIds: [{
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+        default: []
+    }],
+    // Optioneel: Als je matches ook direct wilt opslaan
+    matchedUserIds: [{
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+        default: []
+    }],
+    // ===============================
 })
 
 const userModel = mongoose.model('user', userSchema)

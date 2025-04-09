@@ -1,146 +1,232 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import axios from 'axios';
+// src/pages/MatchScreen.jsx
+
+import React, { useState, useEffect, useCallback, useContext } from 'react';
+import axios from 'axios'; // Zorg dat axios correct is geconfigureerd
 import toast from 'react-hot-toast';
-import {UserContext} from '../../context/userContext'
+import { UserContext } from '../../context/UserContext'; // <<< PAS DIT PAD AAN!
+
+// --- Configuratie Constanten ---
+const MATCH_BATCH_SIZE = 10; // Aantal profielen per keer ophalen
+const FETCH_MORE_THRESHOLD = 5; // Haal meer als er minder dan dit aantal over is
 
 export default function MatchScreen() {
-  const { token, isLoading: isAuthLoading } = useUserContext(); // Token nodig voor API calls
-  const [potentialMatches, setPotentialMatches] = useState([]); // Array voor profielen
+  // --- State voor deze Component ---
+  const [potentialMatches, setPotentialMatches] = useState([]); // Lijst met profielen
   const [currentIndex, setCurrentIndex] = useState(0);       // Index van huidig profiel
-  const [isLoadingMatches, setIsLoadingMatches] = useState(true); // Laden van matches
-  const [error, setError] = useState(null);
-  const [matchNotification, setMatchNotification] = useState(null); // Voor "It's a Match!"
+  const [isLoadingMatches, setIsLoadingMatches] = useState(true); // Start true voor initiële lading
+  const [error, setError] = useState(null);                   // Foutmelding bij ophalen
 
-  // ... (rest van de code volgt) ...
-  // ... (binnen MatchScreen component) ...
+  // --- Globale State uit Context ---
+  const { user: currentUser, loading: isAuthLoading } = useContext(UserContext); // Haal beschikbare data op
 
-  const fetchMatches = useCallback(async () => {
-    if (!token || isAuthLoading) return; // Wacht op token en auth check
-    setIsLoadingMatches(true);
+  // Afgeleide authenticatie status (check na laden en of user bestaat)
+  const isAuthenticated = !isAuthLoading && !!currentUser;
+
+  // --- Functie om Matches op te Halen ---
+  const fetchMatches = useCallback(async (isInitialFetch = false) => {
+    const token = localStorage.getItem('token');
+
+    // Stop als authenticatie nog bezig is of geen token aanwezig is
+    if (isAuthLoading || !token) {
+      if (!token && !isAuthLoading) setIsLoadingMatches(false); // Zekerheid: stop laden
+      return;
+    }
+
+    // Voorkom dubbele fetches (alleen als het NIET de initiële fetch is)
+    if (isLoadingMatches && !isInitialFetch) {
+      console.log("fetchMatches: Skip, andere fetch al bezig.");
+      return;
+    }
+
+    console.log("MatchScreen: Fetching potential matches...");
+    setIsLoadingMatches(true); // Zet laden AAN
     setError(null);
+
     try {
-      // Roep je backend endpoint aan
-      const response = await axios.get('/api/matches/potential', { // Juiste pad gebruiken!
-        headers: { 'Authorization': `Bearer ${token}` }
-        // Voeg evt. 'params' toe voor paginering als je backend dat ondersteunt
+      // Roep backend aan (Pas endpoint aan!)
+      const response = await axios.get('/matches/potential', {
+        headers: { 'Authorization': `Bearer ${token}` },
+        params: {
+          limit: MATCH_BATCH_SIZE,
+          skip: isInitialFetch ? 0 : potentialMatches.length // Paginering: sla over wat we al hebben (behalve bij eerste fetch)
+        }
       });
-      const newMatches = response.data.matches || response.data || []; // Haal array op
-      // Voeg alleen nieuwe matches toe (voorkom duplicaten na refresh/refetch)
-      setPotentialMatches(prev => {
-           const currentIds = new Set(prev.map(m => m._id));
-           return [...prev, ...newMatches.filter(m => !currentIds.has(m._id))];
-       });
+
+      const newMatches = response.data?.matches || response.data || []; // Haal array op (flexibel)
+      console.log(`MatchScreen: Received ${newMatches.length} matches.`);
+
+      if (newMatches.length > 0) {
+        setPotentialMatches(prevMatches => {
+          const existingIds = new Set(prevMatches.map(m => m._id));
+          const filteredNew = newMatches.filter(m => !existingIds.has(m._id));
+          console.log(`MatchScreen: Adding ${filteredNew.length} new unique matches.`);
+          // Bij eerste fetch: vervang lijst. Bij latere: voeg toe.
+          return isInitialFetch ? filteredNew : [...prevMatches, ...filteredNew];
+        });
+        // Reset index alleen bij allereerste fetch
+        if (isInitialFetch) {
+          setCurrentIndex(0);
+        }
+      } else {
+        console.log("MatchScreen: No new matches received from backend.");
+         if (isInitialFetch) { // Als we bij de eerste fetch niets krijgen
+             setPotentialMatches([]);
+             setCurrentIndex(0);
+         }
+         // Als we later niets meer krijgen, hoeven we niets te doen, de gebruiker ziet vanzelf de "geen profielen" melding.
+      }
+
     } catch (err) {
       console.error("Error fetching matches:", err);
-      setError('Kon geen matches ophalen.');
-      toast.error('Kon geen matches ophalen.');
+      const message = err.response?.data?.message || 'Kon geen matches ophalen.';
+      setError(message); // Sla error op
     } finally {
-      setIsLoadingMatches(false);
+      setIsLoadingMatches(false); // Zet laden UIT
     }
-  }, [token, isAuthLoading]); // Dependencies voor useCallback
+  // Dependencies: auth laden status. De rest wordt intern gelezen of getriggerd.
+  }, [isAuthLoading, potentialMatches.length]); // potentialMatches.length toegevoegd voor 'skip' param
 
-  // Haal matches op bij het laden van de component (als gebruiker ingelogd is)
-  useEffect(() => {
-    // Alleen fetchen als we niet al aan het laden zijn EN er geen matches zijn (of index 0)
-    // Dit voorkomt onnodig fetchen als de component opnieuw rendert maar er al matches zijn.
-    if (token && !isAuthLoading && potentialMatches.length === 0 && currentIndex === 0) {
-        fetchMatches();
-    }
-     // Als er geen token is na het laden, stop ook het laden van matches
-     if (!token && !isAuthLoading) {
-         setIsLoadingMatches(false);
-     }
-  }, [token, isAuthLoading, fetchMatches, potentialMatches.length, currentIndex]); // Effect opnieuw runnen als token/auth verandert
 
-  // ... (binnen MatchScreen component) ...
-
-  const handleAction = async (action) => { // action is 'like' of 'dislike'
+  // --- Functie om Like/Dislike Actie te Verwerken ---
+  const handleAction = useCallback(async (action) => {
+    if (currentIndex >= potentialMatches.length) return; // Geen match om op te reageren
     const currentMatch = potentialMatches[currentIndex];
-    if (!currentMatch || !token) return; // Veiligheidscheck
+    const token = localStorage.getItem('token');
+
+    // Voorkom actie als er geen match/token is, of als we nieuwe matches laden
+    if (!currentMatch || !token || isLoadingMatches) {
+         console.warn("handleAction: Action prevented (no match/token, or loading)");
+         return;
+    }
+
+    console.log(`MatchScreen: Action '${action}' on user ${currentMatch._id}`);
+    // Optioneel: zet een tijdelijke 'isActing' state om knoppen te disablen
 
     try {
-      // Stuur actie naar backend
-      const response = await axios.post('/api/matches/action', {
+      // Stuur actie naar backend (Pas endpoint aan!)
+      const response = await axios.post('/matches/action', {
         targetUserId: currentMatch._id,
         action: action
       }, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
 
-      // Optioneel: Toon match notificatie
-      if (response.data.mutualMatch) {
-        setMatchNotification(`It's a Match met ${currentMatch.name}!`);
-        setTimeout(() => setMatchNotification(null), 4000);
+      // Verwerk mutual match
+      if (action === 'like' && response.data.mutualMatch) {
+        toast.success(`🎉 It's a Match met ${currentMatch.name}!`);
       }
 
-      // --- BELANGRIJK: Ga naar de volgende persoon ---
+      // Ga naar de volgende index (doe dit *na* de API call)
       const nextIndex = currentIndex + 1;
       setCurrentIndex(nextIndex);
-      // --------------------------------------------
 
-      // --- Optioneel: Haal nieuwe matches als lijst bijna leeg is ---
-      // (Dit is een simpele check, kan slimmer met paginering)
-      if (potentialMatches.length > 0 && potentialMatches.length - nextIndex < 5) {
-          console.log("Fetching more matches as list is short...");
-          fetchMatches();
+      // Check of we nieuwe matches moeten laden
+      if (potentialMatches.length - nextIndex < FETCH_MORE_THRESHOLD) {
+        console.log("MatchScreen handleAction: Fetching more matches...");
+        fetchMatches(); // Vraag volgende batch
       }
-      // ---------------------------------------------------------
 
     } catch (err) {
       console.error(`Error processing ${action}:`, err);
       toast.error(`Kon ${action} niet verwerken.`);
-      // Overweeg of je hier toch naar de volgende wilt gaan om niet vast te lopen
-      // setCurrentIndex(prev => prev + 1);
+    } finally {
+       // Zet 'isActing' state terug naar false indien gebruikt
     }
-  };
+  }, [currentIndex, potentialMatches, fetchMatches, isLoadingMatches]); // Afhankelijk van huidige staat en fetch functie
 
-  // ... (binnen MatchScreen component, na alle logica) ...
+
+  // --- Effect Hook: Haal initieel matches op ---
+  useEffect(() => {
+    console.log("MatchScreen useEffect Check: Auth Loading:", isAuthLoading, "User:", !!currentUser);
+    // Wacht tot auth klaar is
+    if (!isAuthLoading) {
+      if (currentUser) {
+        // Gebruiker ingelogd: start eerste fetch als lijst leeg is
+        if (potentialMatches.length === 0) {
+           console.log("MatchScreen useEffect: Triggering initial fetch...");
+           fetchMatches(true); // Geef true mee
+        }
+      } else {
+         // Niet ingelogd, stop met laden
+         console.log("MatchScreen useEffect: Not authenticated.");
+         setIsLoadingMatches(false);
+      }
+    }
+    // Deze dependencies zorgen ervoor dat de check opnieuw draait als de auth status verandert.
+  }, [isAuthLoading, currentUser, fetchMatches]); // fetchMatches is nu stabiel door useCallback
+
 
   // --- Rendering Logic ---
-  if (isAuthLoading) return <div>Authenticatie checken...</div>;
-  if (!token) return <div>Log in om te matchen.</div>;
 
-  // Gebruik isLoadingMatches voor feedback tijdens het ophalen
+  // 1. Wacht op authenticatie check
+  if (isAuthLoading) {
+    return <div>Authenticatie checken...</div>;
+  }
+
+  // 2. Gebruiker niet ingelogd
+  if (!currentUser) {
+    return <div>Je moet ingelogd zijn om te matchen. Login a.u.b.</div>;
+  }
+
+  // 3. Eerste keer matches laden
   if (isLoadingMatches && potentialMatches.length === 0) {
-      return <div>Matches laden...</div>;
+    return <div>Matches aan het laden...</div>;
   }
 
-  if (error) return <div>{error}</div>;
-
-  // Check of er nog matches zijn in de huidige lijst
-  if (currentIndex >= potentialMatches.length) {
-      // Als we niet meer aan het laden zijn -> echt geen matches meer
-      return isLoadingMatches ? <div>Meer matches laden...</div> : <div>Geen profielen meer gevonden!</div>;
+  // 4. Fout bij laden
+  if (error) {
+    return <div>Er ging iets mis: {error} <button onClick={() => fetchMatches(true)}>Opnieuw proberen</button></div>;
   }
 
-  // Haal het huidige profiel op
+  // 5. Geen matches (meer) gevonden
+  if (!isLoadingMatches && currentIndex >= potentialMatches.length) {
+    return <div>Geen nieuwe profielen gevonden! <button onClick={() => fetchMatches(true)}>Check opnieuw</button></div>;
+  }
+
+  // 6. Huidige match ophalen (met check)
   const currentMatch = potentialMatches[currentIndex];
+  if (!currentMatch) {
+     return <div>Profiel data niet beschikbaar (index: {currentIndex})...</div>;
+  }
 
+  // 7. Toon profiel en knoppen
   return (
-    <div>
-      {/* Toon eventuele match notificatie */}
-      {matchNotification && (
-          <div className="match-popup"> {/* Style deze pop-up */}
-              <h2>{matchNotification}</h2>
-          </div>
-      )}
+    <div className="match-screen-container"> {/* Geef een class mee voor styling */}
+      <h2>Match Tijd!</h2>
 
-      <h2>Match!</h2>
+      {/* Subtiele loading indicator als we op achtergrond laden */}
+      {isLoadingMatches && <p style={{ textAlign: 'center', color: 'grey' }}>Meer matches laden...</p>}
 
-      {/* Toon profielkaart (maak hier idealiter een aparte component voor) */}
-      <div className="profile-display">
-         {/* Veilig toegang met optional chaining */}
-         <h3>{currentMatch?.name}, {currentMatch?.age ?? '?'}</h3>
-         {/* <img src={currentMatch?.photos?.[0]} alt={currentMatch?.name} /> */}
-         <p>{currentMatch?.bio ?? 'Geen bio'}</p>
-         {/* Toon andere details zoals labels, afstand etc. */}
+      {/* Profielkaart (basis weergave) */}
+      <div style={{ border: '1px solid #ccc', borderRadius: '8px', padding: '15px', margin: '15px auto', maxWidth: '350px', minHeight: '200px' }}>
+        <h3>{currentMatch.name ?? 'Onbekende'}, {currentMatch.age ?? '?'}</h3>
+        {/* Voeg hier later foto toe */}
+        {/* <img src={currentMatch.photos?.[0] || '/placeholder.jpg'} alt={currentMatch.name} style={{ width: '100%', height: '200px', objectFit: 'cover', borderRadius: '4px' }} /> */}
+        <p style={{ marginTop: '10px' }}>{currentMatch.bio ?? 'Geen bio beschikbaar.'}</p>
+        {/* Toon eventueel andere details zoals labels */}
+         <div style={{ fontSize: 'smaller', color: '#555', marginTop: '10px' }}>
+           ID: {currentMatch._id} {/* Alleen voor debuggen! */}
+         </div>
       </div>
 
-      {/* Actie knoppen */}
-      <div className="actions">
-        <button onClick={() => handleAction('dislike')}>Nope</button>
-        <button onClick={() => handleAction('like')}>Like</button>
+      {/* Actieknoppen */}
+      <div style={{ marginTop: '20px', textAlign: 'center' }}>
+        <button
+          onClick={() => handleAction('dislike')}
+          disabled={isLoadingMatches} // Disable tijdens laden
+          style={{ marginRight: '20px', padding: '15px 25px', fontSize: '1.2em', background: 'lightcoral', border: 'none', borderRadius: '50px', cursor: 'pointer' }}
+        >
+          Nope ❌
+        </button>
+        <button
+          onClick={() => handleAction('like')}
+          disabled={isLoadingMatches} // Disable tijdens laden
+          style={{ padding: '15px 25px', fontSize: '1.2em', background: 'lightgreen', border: 'none', borderRadius: '50px', cursor: 'pointer' }}
+        >
+          Like ❤️
+        </button>
       </div>
+
     </div>
   );
 }

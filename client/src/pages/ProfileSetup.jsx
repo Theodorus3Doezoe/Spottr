@@ -21,12 +21,18 @@ export default function ProfileSetup() {
         lookingFor: LOOKING_FOR_OPTIONS[0],
         sportLabels: [], // Max 2, user input
         personalLabels: [], // Max 4, [{label: 'Category', value: 'User input'}]
+        showMePreference: '',
+        maxDistance: 50,
+        minAge: 18,
+        maxAge: 25,
     });
+
 
     // State voor input velden
     const [currentSportLabelInput, setCurrentSportLabelInput] = useState('');
     const [currentPersonalLabelCategory, setCurrentPersonalLabelCategory] = useState('');
     const [currentPersonalLabelValue, setCurrentPersonalLabelValue] = useState('');
+
 
     // --- Standaard onChange voor bio, lookingFor ---
     const onChange = (e) => {
@@ -112,7 +118,7 @@ export default function ProfileSetup() {
     const setupProfile = async (e) => {
         e.preventDefault();
         // Stuur de huidige staat van `data`
-        const { bio, gender, lookingFor, sportLabels, personalLabels } = data;
+        const { bio, gender, lookingFor, sportLabels, personalLabels, maxDistance, minAge, maxAge, showMePreference } = data;
 
         if (!bio.trim()) {
            return toast.error('Bio mag niet leeg zijn.');
@@ -122,11 +128,7 @@ export default function ProfileSetup() {
         try {
             // !! VERVANG '/api/profile/setup' MET JE ECHTE BACKEND ENDPOINT !!
             const response = await axios.put('updateProfile', {
-                bio,
-                gender,
-                lookingFor,
-                sportLabels,
-                personalLabels // Stuur de array van objecten mee
+                bio, gender, lookingFor, sportLabels, personalLabels, maxDistance, minAge, maxAge, showMePreference
             }
             // , { withCredentials: true } // Indien nodig voor auth
             );
@@ -246,7 +248,65 @@ export default function ProfileSetup() {
                          </div>
                      )}
                 </div>
-
+                <div className="form-group">
+          <label htmlFor="show-me">Show me</label>
+          {/* Actual select dropdown */}
+          <select
+              id="show-me"
+              name="showMePreference"
+              className="select-field" // Use the same class for styling consistency
+              value={data.showMePreference} 
+              onChange={onChange}
+              required
+          >
+            <option value="" disabled hidden>Choose preference</option>
+            <option value="Women">Women</option>
+            <option value="Men">Men</option>
+            <option value="Women">Both</option>
+            {/* Add other options if needed */}
+            {/* <option value="Everyone">Everyone</option> */}
+          </select>
+        </div>
+        <div className="form-group slider-group">
+          <label htmlFor="max-distance">Max distance</label>
+          <span className="slider-value">{data.maxDistance}km</span>
+          <input
+            type="range"
+            id="max-distance"
+            min="1"
+            max="300"
+            name="maxDistance"
+            value={data.maxDistance}
+            onChange={onChange}
+            className="slider"
+            />
+        </div>
+        <div className="form-group slider-group">
+    <label>Age range</label>
+    <span className="slider-value">{data.minAge} - {data.maxAge}</span> {/* <<< Lees uit data object */}
+    <div className="age-sliders">
+      <input
+        type="range"
+        min="18"
+        max="99"
+        name="minAge" // <<< Koppel aan state key
+        value={data.minAge} // <<< Lees uit data object
+        onChange={onChange} // <<< Gebruik speciale handler (indien nodig)
+        className="slider age-slider"
+        aria-label="Minimum age"
+      />
+      <input
+        type="range"
+        min="19"
+        max="100"
+        name="maxAge" // <<< Koppel aan state key
+        value={data.maxAge} // <<< Lees uit data object
+        onChange={onChange} // <<< Gebruik speciale handler (indien nodig)
+        className="slider age-slider"
+        aria-label="Maximum age"
+      />
+    </div>
+        </div>
                 {/* Submit Button */}
                 <div style={{ marginTop: '30px' }}>
                     <button type="submit">Save changes</button>

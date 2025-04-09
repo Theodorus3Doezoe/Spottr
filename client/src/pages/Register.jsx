@@ -50,6 +50,11 @@ export default function Register() {
       console.log(error)
     }
   }
+
+  // if (user) {
+  //   return <div>You need to log out before registerin!</div>;
+  // }
+
   return (
     <div className="register_container">
       <form onSubmit={registerUser}>

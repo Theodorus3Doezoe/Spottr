@@ -60,7 +60,7 @@ const router  = createBrowserRouter([
           element: <ProfileSetup/>,
         },
         {
-          path: 'test-matching',
+          path: 'testmatching',
           element: <TestMatching/>
         }
       ]
