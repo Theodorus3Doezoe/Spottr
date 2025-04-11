@@ -34,12 +34,12 @@ export default function ProfileSetup() {
     const [currentPersonalLabelValue, setCurrentPersonalLabelValue] = useState('');
 
 
-    // --- Standaard onChange voor bio, lookingFor ---
+    // Standaard onChange voor bio, lookingFor
     const onChange = (e) => {
         setData({ ...data, [e.target.name]: e.target.value });
     };
-
-    // --- Functies voor Sport Labels (Max 2, User Input) ---
+    // door ai gemaakt
+    // Functies voor Sport Labels (Max 2, User Input)
     const handleAddSportLabel = () => {
         const trimmedLabel = currentSportLabelInput.trim();
         // Check of input leeg is
@@ -73,7 +73,7 @@ export default function ProfileSetup() {
         }));
     };
 
-    // --- Functies voor Personal Labels (Max 4, Category + User Input) ---
+    // Functies voor Personal Labels (Max 4, Category + User Input)
     const handleAddPersonalLabel = () => {
         const trimmedValue = currentPersonalLabelValue.trim();
         // Check of categorie en waarde zijn ingevuld
@@ -113,8 +113,9 @@ export default function ProfileSetup() {
             personalLabels: prevData.personalLabels.filter(pl => pl.label !== labelCategoryToRemove)
         }));
     };
+    // tot hier
 
-    // --- Profiel opslaan ---
+    // Profiel opslaan
     const setupProfile = async (e) => {
         e.preventDefault();
         // Stuur de huidige staat van `data`
@@ -147,7 +148,7 @@ export default function ProfileSetup() {
         }
     };
 
-    // --- Render JSX ---
+    // Render JSX
     return (
         <div>
             <h2>Profiel Bewerken/Instellen</h2>
@@ -307,7 +308,6 @@ export default function ProfileSetup() {
       />
     </div>
         </div>
-                {/* Submit Button */}
                 <div style={{ marginTop: '30px' }}>
                     <button type="submit">Save changes</button>
                 </div>

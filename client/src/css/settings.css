@@ -249,7 +249,10 @@
        pointer-events: auto; /* Enable pointer events only on the thumb */
   }
   
-  
+  .save-changes-button {
+    margin-top: 2vh;
+  }
+
   /* Logout Button */
   .logout-button {
     display: flex;
@@ -257,7 +260,7 @@
     justify-content: center;
     width: 100%;
     padding: 12px 15px;
-    margin-top: 30px; /* Space above button */
+    /* margin-top: 30px; Space above button */
     font-size: 16px;
     font-weight: 500;
     color: #ff3b30; /* Red color for logout */

@@ -21,8 +21,8 @@ const userSchema = new Schema ({
         type: Boolean,
         default: false
     },
+
     //profile details
-    // --- Profiel Velden (toegevoegd aan User) ---
     bio: {
         type: String,
         maxlength: 500,
@@ -66,24 +66,22 @@ const userSchema = new Schema ({
     minAge: Number,
     maxAge: Number,
 
-    // === VELDEN VOOR SWIPE/MATCH DATA ===
+    // match data
     likedUserIds: [{
-        type: Schema.Types.ObjectId, // Slaat MongoDB Object ID's op
-        ref: 'User',                 // Verwijst naar andere documenten in de 'User' collectie
-        default: []                  // Begin altijd met een lege lijst
+        type: Schema.Types.ObjectId, 
+        ref: 'User',                
+        default: []                 
     }],
     dislikedUserIds: [{
         type: Schema.Types.ObjectId,
         ref: 'User',
         default: []
     }],
-    // Optioneel: Als je matches ook direct wilt opslaan
     matchedUserIds: [{
         type: Schema.Types.ObjectId,
         ref: 'User',
         default: []
     }],
-    // ===============================
 })
 
 const userModel = mongoose.model('user', userSchema)

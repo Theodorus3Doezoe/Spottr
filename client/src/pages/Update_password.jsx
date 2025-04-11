@@ -1,23 +1,26 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import toast, {Toaster} from 'react-hot-toast'
+//heel de pagina ai
 // Make sure to link the CSS file (e.g., in your main HTML or App component)
-import './update_password.css';
+import '../css/update_password.css';
 
 // Update Password Screen Component
 export default function Update_password() {
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmNewPassword, setConfirmNewPassword] = useState('');
+  const navigate = useNavigate()
 
   const submitHandler = (event) => {
     event.preventDefault();
     // Add password update logic here
     if (newPassword !== confirmNewPassword) {
-      alert("New passwords don't match!");
+      toast.success("New passwords don't match!")
       return;
     }
-    console.log('Updating password...');
-    alert('Password updated successfully! (Placeholder)');
+    navigate('/settings')
+    toast.success('Password updated successfully!')
     // Clear fields after successful update
     setCurrentPassword('');
     setNewPassword('');

@@ -68,7 +68,7 @@ export default function Settings() {
           <p>{user.surname}</p>
           <p>{user.email}</p>
         </div>
-        <Link to={'/update_password'} style={{ textDecoration: 'none', color: 'black' }}>
+        <Link to={'/updatepassword'} style={{ textDecoration: 'none', color: 'black' }}>
           <div className="link-group">
             <span>Change password</span>
             <span className="arrow-icon">&gt;</span>
@@ -98,6 +98,7 @@ export default function Settings() {
             {/* <option value="Everyone">Everyone</option> */}
           </select>
         </div>
+        {/* ai */}
         <div className="form-group slider-group">
           <label htmlFor="max-distance">Max distance</label>
           <span className="slider-value">{maxDistance}km</span>
@@ -111,6 +112,7 @@ export default function Settings() {
             className="slider"
             />
         </div>
+
         <div className="form-group slider-group">
           <label htmlFor="age-range">Age range</label>
           <span className="slider-value">{minAge} - {maxAge}</span>
@@ -136,9 +138,9 @@ export default function Settings() {
                   aria-label="Maximum age"
               />
           </div>
-          <button className="save-changes-button">Save changes</button>
         </div>
-
+        <button className="save-changes-button">Save changes</button>
+        {/* tot hier */}
         {/* Logout Button */}
         <button className="logout-button" onClick={logoutHandler}>
           {/* Simple SVG for logout icon */}

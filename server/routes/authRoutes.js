@@ -17,12 +17,13 @@ router.use(
 router.post('/register', registerUser)
 router.post('/login', loginUser)
 router.post('/logout', logoutUser)
+router.post('/matches/action', matchAction)
 
 // Get requests
 router.get('/profile', getProfile)
 router.get('/matches/potential', getPotentialMatches)
 
+// Put requests
 router.put('/updateProfile', updateProfile)
-router.post('/matches/action', matchAction)
 
 module.exports = router

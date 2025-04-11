@@ -1,5 +1,5 @@
 import React, { useState} from 'react';
-import { useNavigate, Link } from 'react-router-dom'; // Voor redirect na succes
+import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import {toast} from 'react-hot-toast'
 import '../css/register.css'
@@ -7,7 +7,6 @@ import '../css/register.css'
 
 
 export default function Login() {
-  // const { setUser } = useContext(UserContext)
   const [data, setData] = useState({
     email: '',
     password: '',
@@ -24,7 +23,6 @@ export default function Login() {
       if(data.error) {
         toast.error(data.error)
       } else {
-        // setUser(data.user)
         setData({
           email: '',
           password: '',
@@ -44,10 +42,6 @@ export default function Login() {
       console.log(error)
     }
   }
-
-  // if (user) {
-  //   return <div>You need to log out before login in!</div>;
-  // }
 
   return (
     <div className="register_container">

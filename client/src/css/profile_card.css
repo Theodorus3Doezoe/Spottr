@@ -98,11 +98,11 @@
 
 }
 
-.label_1 {
+.label_0 {
     background-color: #1081E0;
 }
 
-.label_2 {
+.label_1 {
     background-color: #FD5386;
 }
 
@@ -143,4 +143,20 @@
 
 .reject_match_btns img{
     width: 15vw;
+}
+
+.no-matches {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    font-size: 1.5em;
+}
+
+.no-matches button {
+    padding: 10px;
+    border-radius: 10px;
+    width: 40vw;
+    margin-top: 1vh;
 }

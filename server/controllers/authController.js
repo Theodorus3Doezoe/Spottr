@@ -133,7 +133,7 @@ const loginUser = async (req, res) => {
 const getProfile = (req, res) => {
     const { token } = req.cookies;
     if (token) {
-      jwt.verify(token, process.env.JWT_SECRET, {}, async (err, decodedPayload) => { // Hernoemd naar decodedPayload voor duidelijkheid
+      jwt.verify(token, process.env.JWT_SECRET, {}, async (err, decodedPayload) => {
         if (err) {
            console.error("JWT Verification Error:", err);
            return res.status(401).json({ error: 'Token invalid or expired' }); // Stuur een error status
@@ -144,10 +144,10 @@ const getProfile = (req, res) => {
           if (!fullUser) {
             return res.status(404).json({ error: 'User not found' });
           }
-            // --- Start Leeftijd Berekening ---
-        let age = null; // Initialiseer leeftijd (bv. als null als het niet berekend kan worden)
+            //Leeftijd berekenening
+        let age = null;
 
-        if (fullUser.birthdate) { // Check 1: Bestaat de geboortedatum in het gebruikersobject?
+        if (fullUser.birthdate) { // 50% door ai
           try {
             // Probeer de geboortedatum te parsen.
             // Controleer of het een string is (voor parseISO) of al een Date object.
@@ -175,6 +175,7 @@ const getProfile = (req, res) => {
 
         // Stuur het volledige gebruikersobject INCLUSIEF de berekende leeftijd
         res.json(userObject)
+        // tot hier
         } catch (dbError) {
           console.error("Database lookup error:", dbError);
           res.status(500).json({ error: 'Could not retrieve profile' });
@@ -250,8 +251,8 @@ const updateProfile = (req, res) => {
                     userId,
                     updateData,
                     {
-                        new: true,           // Geef het *bijgewerkte* document terug
-                        runValidators: true, // ESSENTIEEL: Voer schema validaties uit!
+                        new: true,           
+                        runValidators: true, 
                         context: 'query'
                     }
                 ).select('-password'); // Zorg dat wachtwoord nooit wordt teruggestuurd
@@ -292,7 +293,7 @@ const updateProfile = (req, res) => {
 const MATCH_LIMIT = 20;
 
 const getPotentialMatches = async (req, res) => {
-    // --- START AUTH CHECK (Cookie-based, zoals je eerder gebruikte) ---
+    // --- START AUTH CHECK
     const { token } = req.cookies;
     if (!token) {
         return res.status(401).json({ error: 'Authenticatie mislukt (geen token gevonden)' });
@@ -350,17 +351,17 @@ const getPotentialMatches = async (req, res) => {
             // 5. Bouw de MongoDB Query
             const query = {
                 _id: { $ne: userId, $nin: swipedUserIds },
-                birthdate: { $gte: earliestBirthDate.toISOString(), $lte: latestBirthDate.toISOString() },
+                birthdate: { $gte: earliestBirthDate.toISOString(), $lte: latestBirthDate.toISOString() }, // regel door ai.
                 profileSetup: true // Gebruik de juiste veldnaam
             };
 
-            // 6. Gender Filter (huidige gebruiker zoekt specifiek gender)
+            // 6. Gender Filter
             if (showMePreference && showMePreference !== 'Everyone') {
                 query.gender = showMePreference.toLowerCase() === 'women' ? 'female' : 'male';
             }
 
-            // --- Wederzijdse Gender Check (AANGEPAST!) ---
-            // Check nu direct het 'showMePreference' veld van de andere gebruiker
+           
+            // Check nu direct het 'showMePreference' veld van de andere gebruiker door ai
             const genderMatchConditions = [];
             if (currentUserGender === 'male') {
                  // Zoek anderen wiens directe 'showMePreference' veld 'Men' of 'Everyone' is
@@ -376,9 +377,7 @@ const getPotentialMatches = async (req, res) => {
             } else if (genderMatchConditions.length > 0){
                   query.$and = genderMatchConditions;
             }
-            // ---------------------------------------------
 
-            // 7. Afstandsfilter (weggelaten zoals eerder gevraagd, anders hier toevoegen met currentUser.maxDistance)
             // if (currentUser.location && currentUser.location.coordinates && maxDistance !== undefined) { ... }
 
             console.log("DEBUG: Final MongoDB Query (direct fields):", JSON.stringify(query, null, 2));
@@ -386,7 +385,7 @@ const getPotentialMatches = async (req, res) => {
             // 8. Voer query uit
             const potentialMatches = await User.find(query)
                 .limit(MATCH_LIMIT)
-                .select('name surname bio birthdate gender photos sportLabels personalLabels') // Selecteer publieke velden
+                .select('name surname bio birthdate gender photos sportLabels personalLabels lookingFor') // Selecteer publieke velden
                 .lean();
 
             // 9. Bereken leeftijd
@@ -431,9 +430,7 @@ const matchAction = async (req, res) => {
 
         // Token is geldig, we hebben de user ID (van de swiper)
         const swiperId = decodedPayload.id; // <<< Gebruik ID uit token payload
-        // --- EINDE AUTH CHECK ---
 
-        // --- START SWIPE LOGIC (binnen de verify callback) ---
         try {
             // Haal data uit de request body
             const { targetUserId, action } = req.body;
@@ -461,12 +458,10 @@ const matchAction = async (req, res) => {
                 };
             }
 
-            // Voer de update uit op de swiper
-            const updatedSelf = await User.findByIdAndUpdate(swiperId, updateSwiperData, { new: true }); // new: true is optioneel hier
+            // Voer de update uit op de swiper door ai
+            const updatedSelf = await User.findByIdAndUpdate(swiperId, updateSwiperData, { new: true }); 
             if (!updatedSelf) {
-                // Dit zou niet vaak moeten gebeuren als het token net geldig was
                 console.error(`Swipe Action: Swiper user ${swiperId} niet gevonden voor update.`);
-                // Misschien toch doorgaan met de response? Anders blijft frontend hangen.
             }
              console.log(`Swipe Action: ${action} from ${swiperId} to ${targetUserId} recorded on swiper.`);
 
@@ -477,8 +472,7 @@ const matchAction = async (req, res) => {
                 // Zoek de target user op en kijk alleen naar zijn/haar likedUserIds
                 const targetUser = await User.findById(targetUserId).select('likedUserIds');
 
-                // Check of de swiperId in de likedUserIds van de targetUser staat
-                // Gebruik optional chaining (?.) voor het geval targetUser niet gevonden wordt
+                // Check of de swiperId in de likedUserIds van de targetUser staat deels door ai
                 if (targetUser?.likedUserIds?.includes(swiperId)) {
                     mutualMatch = true;
                     console.log(`MATCH! ${swiperId} and ${targetUserId}`);
@@ -509,9 +503,8 @@ const matchAction = async (req, res) => {
             console.error("Error processing swipe action:", error);
             res.status(500).json({ message: 'Serverfout bij verwerken van swipe.' });
         }
-        // --- EINDE SWIPE LOGIC ---
-    }); // Einde jwt.verify callback
-}; // Einde recordSwipeAction functie
+    });
+};
 
 
 module.exports = {

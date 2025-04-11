@@ -24,6 +24,7 @@ export default function Profile() {
   const sportLabels = ['Fitness', 'Running', 'Yoga'];
   // Note: Personal labels from image seem like key-value pairs, handled differently below
 
+  // icons door ai
   // Simple SVG Icons
   const BackIcon = () => (
     <Link to={'/settings'}>
